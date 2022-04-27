@@ -39,3 +39,26 @@ def casm_query_reader(casm_query_json_path="pass", casm_query_json_data=None):
     if "corr" in results.keys():
         results["corr"] = np.squeeze(results["corr"]).tolist()
     return results
+
+
+def write_eci_json(eci, basis_json_dict):
+    """Writes supplied ECI to the eci.json file for use in grand canonical monte carlo. Written for CASM 1.2.0
+
+    Parameters:
+    -----------
+    eci: numpy.ndarray
+        Vector of ECI values.
+
+    basis_json_dict: dict
+        dictionary read directly from basis.json file.
+
+    Returns:
+    --------
+    data: dict
+        basis.json dictionary formatted with provided eci's
+    """
+
+    for index, orbit in enumerate(basis_json_dict["orbits"]):
+        basis_json_dict["orbits"][index]["cluster_functions"]["eci"] = eci[index]
+
+    return basis_json_dict
