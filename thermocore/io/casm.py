@@ -2,26 +2,27 @@ import json
 import numpy as np
 
 
-def casm_query_reader(casm_query_json_path="pass", casm_query_json_data=None):
+def casm_query_reader(casm_query_json_data: list) -> dict:
     """Reads keys and values from casm query json dictionary.
+
     Parameters:
     -----------
-    casm_query_json_path: str
-        Absolute path to casm query json file.
-        Defaults to 'pass' which means that the function will look to take a dictionary directly.
-    casm_query_json_data: dict
-        Can also directly take the casm query json dictionary.
-        Default is None.
+    casm_query_json_data: list
+        List of dictionaries read from casm query json file.
 
     Returns:
     results: dict
         Dictionary of all data grouped by keys (not grouped by configuraton)
+
+
+    Notes:
+    ------
+    Casm query output json files are lists of dictionaries, where each dictionary corresponds to a configuration. 
+    This function assumes that all dictionaries have the same keys. It reads the keys from the first configuration, and sorts all properties by those keys instead of by configuration.
+    Properties that are a single value or string are passed as a list of those properties. 
+    Properties that are arrays are passed as a list of lists (2D matrices) even if the property only has one value (a matrix of one column). 
     """
-    if casm_query_json_data is None:
-        with open(casm_query_json_path) as f:
-            data = json.load(f)
-    else:
-        data = casm_query_json_data
+    data = casm_query_json_data
     keys = data[0].keys()
     data_collect = []
     for i in range(len(keys)):
@@ -41,7 +42,7 @@ def casm_query_reader(casm_query_json_path="pass", casm_query_json_data=None):
     return results
 
 
-def write_eci_json(eci, basis_json_dict):
+def write_eci_json(eci: np.ndarray, basis_json_dict: dict) -> dict:
     """Writes supplied ECI to the eci.json file for use in grand canonical monte carlo. Written for CASM 1.2.0
 
     Parameters:
@@ -62,3 +63,28 @@ def write_eci_json(eci, basis_json_dict):
         basis_json_dict["orbits"][index]["cluster_functions"]["eci"] = eci[index]
 
     return basis_json_dict
+
+
+def label_missing_energies(energies: np.ndarray) -> np.ndarray:
+    """Labels missing energies with 'np.nan'
+
+    Parameters:
+    -----------
+    energies: np.ndarray
+        Array of energies, including missing energies.
+
+    Returns:
+    --------
+    energies: np.ndarray
+        Array of energies with missing energies labeled with 'np.nan'
+    """
+    uncalculated_energy_descriptor = None
+    if {} in energies:
+        uncalculated_energy_descriptor = {}
+
+    uncalculated_indices = np.where(
+        (energies == uncalculated_energy_descriptor) == True
+    )
+    energies[uncalculated_indices] = np.nan
+    return energies
+
