@@ -41,7 +41,7 @@ def casm_query_reader(casm_query_json_data: list) -> dict:
     return results
 
 
-def write_eci_dict(eci: np.ndarray, basis_json_dict: dict) -> dict:
+def write_eci_dict(eci: numpy.ndarray, basis_json_dict: dict) -> dict:
     """Writes supplied ECI to the dictionary found in basis.json. This can then be written to an eci.json file.
 
     Parameters:
@@ -64,7 +64,7 @@ def write_eci_dict(eci: np.ndarray, basis_json_dict: dict) -> dict:
     return basis_json_dict
 
 
-def label_missing_energies(energies: np.ndarray) -> np.ndarray:
+def label_missing_energies(energies: numpy.ndarray) -> numpy.ndarray:
     """Labels missing energies with 'np.nan'. 
 
     Parameters:
