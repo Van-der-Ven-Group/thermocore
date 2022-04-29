@@ -14,11 +14,10 @@ def casm_query_reader(casm_query_json_data: list) -> dict:
     results: dict
         Dictionary of all data grouped by keys (not grouped by configuraton)
 
-
     Notes:
     ------
-    Casm query output json files are lists of dictionaries, where each dictionary corresponds to a configuration. 
-    This function assumes that all dictionaries have the same keys. It reads the keys from the first configuration, and sorts all properties by those keys instead of by configuration.
+    Casm query jsons are lists of dictionaries; each dictionary corresponds to a configuration. 
+    This function assumes that all dictionaries have the same keys. It sorts all properties by those keys instead of by configuration.
     Properties that are a single value or string are passed as a list of those properties. 
     Properties that are arrays are passed as a list of lists (2D matrices) even if the property only has one value (a matrix of one column). 
     """
@@ -78,6 +77,8 @@ def label_missing_energies(energies: np.ndarray) -> np.ndarray:
     energies: np.ndarray
         Array of energies with missing energies labeled with 'np.nan'
     """
+
+    # Casm 1.2.0 uses None, casm 0.3 uses {}
     uncalculated_energy_descriptor = None
     if {} in energies:
         uncalculated_energy_descriptor = {}
