@@ -32,10 +32,15 @@ def casm_query_reader(casm_query_json_data: list) -> dict:
             data_collect[index].append(element_dict[key])
 
     results = dict(zip(keys, data_collect))
+
     if "comp" in results.keys():
-        comp = np.array(results["comp"])
-        if len(comp.shape) > 2:
-            results["comp"] = np.squeeze(comp).tolist()
+        results["comp"] = np.array(results["comp"])
+        if len(results["comp"].shape) > 2:
+            results["comp"] = np.squeeze(results["comp"])
+        if len(results["comp"].shape) == 1:
+            results["comp"] = np.reshape(results["comp"], (-1, 1))
+        results["comp"] = results["comp"].tolist()
+
     if "corr" in results.keys():
         results["corr"] = np.squeeze(results["corr"]).tolist()
     return results
