@@ -47,26 +47,3 @@ def casm_query_reader(casm_query_json_data: list) -> dict:
         # Remove redundant dimensions in correlation matrix.
         results["corr"] = np.squeeze(results["corr"]).tolist()
     return results
-
-
-def write_eci_dict(eci: numpy.ndarray, basis_json_dict: dict) -> dict:
-    """Writes supplied ECI to the dictionary found in basis.json. This can then be written to an eci.json file.
-
-    Parameters:
-    -----------
-    eci: numpy.ndarray
-        Vector of ECI values.
-
-    basis_json_dict: dict
-        dictionary read directly from basis.json file.
-
-    Returns:
-    --------
-    data: dict
-        basis.json dictionary formatted with provided eci's
-    """
-
-    for index, orbit in enumerate(basis_json_dict["orbits"]):
-        basis_json_dict["orbits"][index]["cluster_functions"]["eci"] = eci[index]
-
-    return basis_json_dict
