@@ -11,6 +11,7 @@ def casm_query_reader(casm_query_json_data: list) -> dict:
         List of dictionaries read from casm query json file.
 
     Returns:
+    --------
     results: dict
         Dictionary of all data grouped by keys (not grouped by configuraton)
 
@@ -34,6 +35,7 @@ def casm_query_reader(casm_query_json_data: list) -> dict:
     results = dict(zip(keys, data_collect))
 
     if "comp" in results.keys():
+        # Enforce that composition is always rank 2.
         results["comp"] = np.array(results["comp"])
         if len(results["comp"].shape) > 2:
             results["comp"] = np.squeeze(results["comp"])
@@ -42,6 +44,7 @@ def casm_query_reader(casm_query_json_data: list) -> dict:
         results["comp"] = results["comp"].tolist()
 
     if "corr" in results.keys():
+        # Remove redundant dimensions in correlation matrix.
         results["corr"] = np.squeeze(results["corr"]).tolist()
     return results
 
@@ -67,30 +70,3 @@ def write_eci_dict(eci: numpy.ndarray, basis_json_dict: dict) -> dict:
         basis_json_dict["orbits"][index]["cluster_functions"]["eci"] = eci[index]
 
     return basis_json_dict
-
-
-def label_missing_energies(energies: numpy.ndarray) -> numpy.ndarray:
-    """Labels missing energies with 'np.nan'. 
-
-    Parameters:
-    -----------
-    energies: np.ndarray
-        Array of energies, including missing energies.
-
-    Returns:
-    --------
-    energies: np.ndarray
-        Array of energies with missing energies labeled with 'np.nan'
-    """
-
-    # Casm 1.2.0 uses None, casm 0.3 uses {}
-    uncalculated_energy_descriptor = None
-    if {} in energies:
-        uncalculated_energy_descriptor = {}
-
-    uncalculated_indices = np.where(
-        (energies == uncalculated_energy_descriptor) == True
-    )
-    energies[uncalculated_indices] = np.nan
-    return energies
-
