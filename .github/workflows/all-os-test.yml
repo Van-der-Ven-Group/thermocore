@@ -1,4 +1,4 @@
-name: Testing pycasm
+name: Testing thermocore
 
 on: [push, pull_request]
 
@@ -20,5 +20,6 @@ jobs:
         run: |
           pip install --upgrade pip wheel
           pip install -r requirements.txt
+          pip install pytest
       - name: Run tests
         run: pytest --exitfirst --verbose --failed-first
