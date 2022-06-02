@@ -1,0 +1,2 @@
+HfNO enumerated basis set used to test a system with multiple basis functions per site.
+Dataset will be updated as actually energies are calculated.
