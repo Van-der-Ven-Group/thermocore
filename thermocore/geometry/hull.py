@@ -304,3 +304,82 @@ def lower_hull_distances(
     return energies - lower_hull_energies(
         compositions, convex_hull, lower_hull_simplex_indices, tolerance=tolerance
     )
+
+
+def missing_and_spurious_ground_states(
+    compositions: np.ndarray,
+    predicted_energies: np.ndarray,
+    calculated_ground_state_indices: np.ndarray,
+) -> tuple(np.ndarray, np.ndarray):
+    """Returns indices of missing ground states (calculated ground states that are not predicted ground states), and spurious ground states (predicted ground states that are not calculated ground states).
+
+    Parameters:
+    -----------
+    compositions: numpy.ndarray
+        Composition for each configuration. shape (n_configurations, n_composition_axes)
+    predicted_energies: numpy.ndarray
+        Predicted energies for each configuration. shape (n_configurations,)
+    calculated_ground_state_indices: numpy.ndarray
+        Vector of indices denoting which configurations are "calculated" or "known" ground states.
+
+    Returns:
+    --------
+        missing_ground_state_indices: numpy.ndarray
+        spurious_ground_state_indices: numpy.ndarray
+    """
+    # Find convex hull and ground states of the predicted energies
+    points = np.hstack((compositions, predicted_energies))
+    hull = ConvexHull(points)
+    hull_vertices, hull_simplices = lower_hull(hull)
+
+    # Collect all "True" ground states which are not predicted
+    missing_ground_state_indices = np.setdiff1d(
+        calculated_ground_state_indices, hull_vertices
+    )
+
+    # Collect all ground states that are predicted and not part of the "True" ground states set.
+    spurious_ground_state_indices = np.setdiff1d(
+        hull_vertices, calculated_ground_state_indices
+    )
+    return tuple(missing_ground_state_indices, spurious_ground_state_indices)
+
+
+def below_hull_of_subset(
+    compositions: np.ndarray, energies: np.ndarray, subset_indices: np.ndarray,
+) -> np.ndarray:
+    """Returns indices of configurations below the hull of some subset of configurations.
+    
+    Parameters:
+    -----------
+    compositions: numpy.ndarray
+        Composition for each configuration. shape (n_configurations, n_composition_axes)
+    energies: numpy.ndarray
+        Vector of energies, shape (n_configurations,)
+    subset_indices: numpy.ndarray
+        Vector of indices denoting which subset of configurations will comprise the hull.
+
+    Returns:
+    --------
+    below_hull_indices: numpy.ndarray
+    """
+
+    # isolate subset data
+    subset_comp = compositions[subset_indices]
+    subset_energies = np.reshape(energies[subset_indices], (-1, 1))
+
+    # Construct subset hull
+    subset_points = np.hstack((subset_comp, subset_energies))
+    subset_hull = ConvexHull(subset_points)
+    lower_hull_vertices, lower_hull_simplices = lower_hull(subset_hull)
+
+    # Calculate hull distances for all configurations
+    hull_dists = lower_hull_distances(
+        compositions=compositions,
+        energies=energies,
+        lower_hull_simplex_indices=lower_hull_simplices,
+    )
+
+    # Find configurations below the hull
+    below_hull_indices = np.where(hull_dists < 0)
+
+    return below_hull_indices
