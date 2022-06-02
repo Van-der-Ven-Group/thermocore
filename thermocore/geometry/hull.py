@@ -64,7 +64,9 @@ def inside_convex_hull(points: np.ndarray, test_points: np.ndarray) -> List[bool
     return [linprog(c, A_eq=A, b_eq=np.append(p, 1.0)).success for p in test_points]
 
 
-def full_hull(compositions: np.ndarray, energies: np.ndarray) -> ConvexHull:
+def full_hull(
+    compositions: np.ndarray, energies: np.ndarray, qhull_options=None
+) -> ConvexHull:
     """Returns the full convex hull of the points specified by appending `energies` to `compositions`.
 
     Parameters
@@ -73,12 +75,16 @@ def full_hull(compositions: np.ndarray, energies: np.ndarray) -> ConvexHull:
         Compositions of points.
     energies: np.ndarray of floats, shape (n_points,)
         Energies of points.
+    qhull_options: str
+        Additional optionals that can be passed to Qhull. See details on the scipy.spatial.ConvexHull documentation. Default=None
     Returns
     -------
     ConvexHull
         Convex hull of points.
     """
-    return ConvexHull(np.hstack((compositions, energies[:, np.newaxis])))
+    return ConvexHull(
+        np.hstack((compositions, energies[:, np.newaxis])), qhull_options=qhull_options
+    )
 
 
 def lower_hull(
