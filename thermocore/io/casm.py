@@ -4,8 +4,9 @@ from collections.abc import Sequence
 import copy
 from math import isclose
 
+
 def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
-    """Groups CASM query data by property instead of by configuration. 
+    """Groups CASM query data by property instead of by configuration.
 
     Parameters:
     -----------
@@ -19,10 +20,10 @@ def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
 
     Notes:
     ------
-    Casm query jsons are lists of dictionaries; each dictionary corresponds to a configuration. 
+    Casm query jsons are lists of dictionaries; each dictionary corresponds to a configuration.
     This function assumes that all dictionaries have the same keys. It sorts all properties by those keys instead of by configuration.
-    Properties that are a single value or string are passed as a list of those properties. 
-    Properties that are arrays are passed as a list of lists (2D matrices) even if the property only has one value (a matrix of one column). 
+    Properties that are a single value or string are passed as a list of those properties.
+    Properties that are arrays are passed as a list of lists (2D matrices) even if the property only has one value (a matrix of one column).
     """
     data = casm_query_json_data
     keys = data[0].keys()
@@ -49,7 +50,7 @@ def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
         # Remove redundant dimensions in correlation matrix.
         results["corr"] = np.squeeze(results["corr"]).tolist()
     return results
-    
+
 
 def pull_ecis_from_json(eci_json: dict) -> list:
     """Returns a list of ECIs from a CASMv1.2.0 eci.json file. Can specify specific linear function indices of interest.
@@ -135,6 +136,7 @@ def append_ECIs_to_basis_data(
 
 
 # TODO: Write test function for this
+# TODO: Did we even want this function?
 def zero_out_ecis_vector(eci_vector: list, tol=1e-10):
     """Returns a vector where values within a tolerance to 0 are set to 0.
 
@@ -155,4 +157,3 @@ def zero_out_ecis_vector(eci_vector: list, tol=1e-10):
         if isclose(eci, 0, abs_tol=tol):
             eci_vector[i] = 0
     return eci_vector
-

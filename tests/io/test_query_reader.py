@@ -47,4 +47,3 @@ def test_query_reader(query_data, expected_query_data):
     """Compare results of casm_query_reader to expected output."""
     query_reader_test = casm_query_reader(query_data)
     assert query_reader_test == expected_query_data
-
