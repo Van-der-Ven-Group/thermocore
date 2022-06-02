@@ -90,14 +90,14 @@ def test_ecis_as_list():
 
 @pytest.fixture
 def test_basis_data():
-    fname = "./data/HfNO_no_energy_data/fake_ecis_for_testing.json"
+    fname = "./tests/data/HfNO_no_energy_data/fake_ecis_for_testing.json"
     with open(fname, "r") as f:
         return json.load(f)
 
 
 @pytest.fixture
 def test_eci_json():
-    fname = "./data/HfNO_no_energy_data/fake_ecis_for_testing.json"
+    fname = "./tests/data/HfNO_no_energy_data/fake_ecis_for_testing.json"
     with open(fname, "r") as f:
         return json.load(f)
 

@@ -6,7 +6,7 @@ from thermocore.io import basis_selection
 
 @pytest.fixture
 def test_basis_data():
-    fpath = "./data/HfNO_no_energy_data/basis.json"
+    fpath = "./tests/data/HfNO_no_energy_data/basis.json"
     with open(fpath, "r") as f:
         basis_data = json.load(f)
     return basis_data
