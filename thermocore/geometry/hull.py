@@ -1,7 +1,7 @@
-from collections.abc import Sequence
 import numpy as np
 from scipy.optimize import linprog
 from scipy.spatial import ConvexHull
+from typing import List, Tuple, Sequence
 
 
 def barycentric_coordinates(point: np.ndarray, vertices: np.ndarray) -> np.ndarray:
@@ -35,7 +35,7 @@ def barycentric_coordinates(point: np.ndarray, vertices: np.ndarray) -> np.ndarr
     return H_inv @ np.append(point, 1)
 
 
-def inside_convex_hull(points: np.ndarray, test_points: np.ndarray) -> list[bool]:
+def inside_convex_hull(points: np.ndarray, test_points: np.ndarray) -> List[bool]:
     """Returns a list of booleans indicating whether each point in `test_points` is inside the convex hull of `points`.
 
     This does not require finding the convex hull of `points`, only determining whether each of `test_points`
@@ -83,7 +83,7 @@ def full_hull(compositions: np.ndarray, energies: np.ndarray) -> ConvexHull:
 
 def lower_hull(
     convex_hull: ConvexHull, tolerance: float = 1e-14
-) -> tuple[np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray]:
     """Returns the vertices and simplices of the lower convex hull (with respect to the last coordinate) of `convex_hull`.
 
     Parameters
@@ -168,7 +168,7 @@ def lower_hull_simplex_containing(
     convex_hull: ConvexHull,
     lower_hull_simplex_indices: Sequence[int] = None,
     tolerance: float = 1e-14,
-) -> tuple[np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray]:
     """Returns the lower convex hull simplices of `convex_hull` containing the points in composition space specified by `compositions`, and the corresponding energies.
 
     For points incident with multiple simplices, one of the simplices is chosen arbitrarily.
