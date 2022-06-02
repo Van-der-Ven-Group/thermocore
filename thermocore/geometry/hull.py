@@ -1,27 +1,24 @@
-from __future__ import annotations
-from collections.abc import Sequence
 import numpy as np
 from scipy.optimize import linprog
 from scipy.spatial import ConvexHull
+from typing import List, Tuple, Sequence
 
 
-def barycentric_coordinates(
-    point: numpy.ndarray, vertices: numpy.ndarray
-) -> numpy.ndarray:
+def barycentric_coordinates(point: np.ndarray, vertices: np.ndarray) -> np.ndarray:
     """Returns the barycentric coordinates of `point` with respect to the simplex defined by `vertices`.
 
     TODO: Take multiple points?
 
     Parameters
     ----------
-    point : numpy.ndarray of floats, shape (n_dim,)
+    point : np.ndarray of floats, shape (n_dim,)
         Point to get barycentric coordinates for.
-    vertices : numpy.ndarray of floats, shape (n_dim + 1, n_dim)
+    vertices : np.ndarray of floats, shape (n_dim + 1, n_dim)
         Vertices of reference simplex for the barycentric coordinates.
 
     Returns
     -------
-    numpy.ndarray of floats, shape (n_dim + 1,)
+    np.ndarray of floats, shape (n_dim + 1,)
         Barycentric coordinates of `point`.
     """
     # Check dimensions
@@ -38,7 +35,7 @@ def barycentric_coordinates(
     return H_inv @ np.append(point, 1)
 
 
-def inside_convex_hull(points: numpy.ndarray, test_points: numpy.ndarray) -> list[bool]:
+def inside_convex_hull(points: np.ndarray, test_points: np.ndarray) -> List[bool]:
     """Returns a list of booleans indicating whether each point in `test_points` is inside the convex hull of `points`.
 
     This does not require finding the convex hull of `points`, only determining whether each of `test_points`
@@ -51,9 +48,9 @@ def inside_convex_hull(points: numpy.ndarray, test_points: numpy.ndarray) -> lis
 
     Parameters
     ---------
-    points : numpy.ndarray of floats, shape (n_points, n_dim)
+    points : np.ndarray of floats, shape (n_points, n_dim)
         Points defining the convex hull.
-    test_points : numpy.ndarray of floats, shape (n_test_points, n_dim)
+    test_points : np.ndarray of floats, shape (n_test_points, n_dim)
         Points to be tested for whether they are inside the convex hull.
 
     Returns
@@ -67,42 +64,40 @@ def inside_convex_hull(points: numpy.ndarray, test_points: numpy.ndarray) -> lis
     return [linprog(c, A_eq=A, b_eq=np.append(p, 1.0)).success for p in test_points]
 
 
-def full_hull(
-    compositions: numpy.ndarray, energies: numpy.ndarray
-) -> scipy.spatial.ConvexHull:
+def full_hull(compositions: np.ndarray, energies: np.ndarray) -> ConvexHull:
     """Returns the full convex hull of the points specified by appending `energies` to `compositions`.
 
     Parameters
     ----------
-    compositions: numpy.ndarray of floats, shape (n_points, n_composition_axes)
+    compositions: np.ndarray of floats, shape (n_points, n_composition_axes)
         Compositions of points.
-    energies: numpy.ndarray of floats, shape (n_points,)
+    energies: np.ndarray of floats, shape (n_points,)
         Energies of points.
     Returns
     -------
-    scipy.spatial.ConvexHull
+    ConvexHull
         Convex hull of points.
     """
     return ConvexHull(np.hstack((compositions, energies[:, np.newaxis])))
 
 
 def lower_hull(
-    convex_hull: scipy.spatial.ConvexHull, tolerance: float = 1e-14
-) -> tuple[numpy.ndarray, numpy.ndarray]:
+    convex_hull: ConvexHull, tolerance: float = 1e-14
+) -> Tuple[np.ndarray, np.ndarray]:
     """Returns the vertices and simplices of the lower convex hull (with respect to the last coordinate) of `convex_hull`.
 
     Parameters
     ----------
-    convex_hull : scipy.spatial.ConvexHull
+    convex_hull : ConvexHull
         Complete convex hull object.
     tolerance : float, optional
         Tolerance for identifying lower hull simplices (default is 1e-14).
 
     Returns
     -------
-    lower_hull_vertex_indices : numpy.ndarray of ints, shape (n_vertices,)
+    lower_hull_vertex_indices : np.ndarray of ints, shape (n_vertices,)
         Indices of points forming the vertices of the lower convex hull.
-    lower_hull_simplex_indices : numpy.ndarray of ints, shape (n_simplices,)
+    lower_hull_simplex_indices : np.ndarray of ints, shape (n_simplices,)
         Indices of simplices (within `convex_hull.simplices`) forming the facets of the lower convex hull.
     """
     # Find lower hull simplices
@@ -120,10 +115,10 @@ def lower_hull(
 
 
 def simplex_energy_equation_matrix(
-    convex_hull: scipy.spatial.ConvexHull,
+    convex_hull: ConvexHull,
     simplex_indices: Sequence[int],
     tolerance: float = 1e-14,
-) -> numpy.ndarray:
+) -> np.ndarray:
     """Returns a matrix that encodes the energy equation of each requested convex hull simplex.
 
     Each row in the matrix corresponds to a simplex (as specified by `simplex_indices`).
@@ -140,7 +135,7 @@ def simplex_energy_equation_matrix(
 
     Parameters
     ----------
-    convex_hull : scipy.spatial.ConvexHull
+    convex_hull : ConvexHull
         Complete convex hull object. Last coordinate of each point is assumed to be energy.
     simplex_indices : Sequence[int]
         Indices of simplices (within `convex_hull.simplices`) to include in matrix.
@@ -149,7 +144,7 @@ def simplex_energy_equation_matrix(
 
     Returns
     -------
-    numpy.ndarray of floats, shape (n_simplex_indices, n_composition_axes + 1)
+    np.ndarray of floats, shape (n_simplex_indices, n_composition_axes + 1)
         Matrix of simplex energy equations.
     """
     # Check for vertical simplices (b = 0 case)
@@ -169,20 +164,20 @@ def simplex_energy_equation_matrix(
 
 
 def lower_hull_simplex_containing(
-    compositions: numpy.ndarray,
-    convex_hull: scipy.spatial.ConvexHull,
+    compositions: np.ndarray,
+    convex_hull: ConvexHull,
     lower_hull_simplex_indices: Sequence[int] = None,
     tolerance: float = 1e-14,
-) -> tuple[numpy.ndarray, numpy.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray]:
     """Returns the lower convex hull simplices of `convex_hull` containing the points in composition space specified by `compositions`, and the corresponding energies.
 
     For points incident with multiple simplices, one of the simplices is chosen arbitrarily.
 
     Parameters
     ----------
-    compositions : numpy.ndarray of floats, shape (n_points, n_composition_axes)
+    compositions : np.ndarray of floats, shape (n_points, n_composition_axes)
         Compositions of points to find containing simplices for. If a 1D array is provided, it is assumed to be a column (multiple points, one composition axis).
-    convex_hull : scipy.spatial.ConvexHull
+    convex_hull : ConvexHull
         Complete convex hull object. Last coordinate of each point is assumed to be energy.
     lower_hull_simplex_indices : Sequence[int], optional
         Indices of lower hull simplices (within `convex_hull.simplices`), if known.
@@ -191,9 +186,9 @@ def lower_hull_simplex_containing(
 
     Returns
     -------
-    simplex_indices : numpy.ndarray of ints, shape (n_points,)
+    simplex_indices : np.ndarray of ints, shape (n_points,)
         Indices of simplices (within `convex_hull.simplices`) containing each point.
-    energies : numpy.ndarray of floats, shape (n_points,)
+    energies : np.ndarray of floats, shape (n_points,)
         Energy values of points specified by `compositions` on their respective simplices.
     """
     if lower_hull_simplex_indices is None:
@@ -241,18 +236,18 @@ def lower_hull_simplex_containing(
 
 
 def lower_hull_energies(
-    compositions: numpy.ndarray,
-    convex_hull: scipy.spatial.ConvexHull,
+    compositions: np.ndarray,
+    convex_hull: ConvexHull,
     lower_hull_simplex_indices: Sequence[int] = None,
     tolerance: float = 1e-14,
-) -> numpy.ndarray:
+) -> np.ndarray:
     """Returns energies of points in composition space specified by `compositions` along the lower hull of `convex_hull`.
 
     Parameters
     ----------
-    compositions : numpy.ndarray of floats, shape (n_points, n_composition_axes)
+    compositions : np.ndarray of floats, shape (n_points, n_composition_axes)
         Compositions of points to get energies for. If a 1D array is provided, it is assumed to be a column (multiple points, one composition axis).
-    convex_hull : scipy.spatial.ConvexHull
+    convex_hull : ConvexHull
         Complete convex hull object. Last coordinate of each point is assumed to be energy.
     lower_hull_simplex_indices : Sequence[int], optional
         Indices of lower hull simplices (within `convex_hull.simplices`), if known.
@@ -261,7 +256,7 @@ def lower_hull_energies(
 
     Returns
     -------
-    numpy.ndarray of floats, shape (n_points,)
+    np.ndarray of floats, shape (n_points,)
         Energies of points.
     """
     return lower_hull_simplex_containing(
@@ -270,23 +265,23 @@ def lower_hull_energies(
 
 
 def lower_hull_distances(
-    compositions: numpy.ndarray,
-    energies: numpy.ndarray,
-    convex_hull: scipy.spatial.ConvexHull = None,
+    compositions: np.ndarray,
+    energies: np.ndarray,
+    convex_hull: ConvexHull = None,
     lower_hull_simplex_indices: Sequence[int] = None,
     tolerance: float = 1e-14,
-) -> numpy.ndarray:
+) -> np.ndarray:
     """Returns hull distances (energy above lower convex hull of `convex_hull`) of points in energy-composition space specified by `compositions` and `energies`.
 
     If `convex_hull` is omitted, it will be calculated from `compositions` and `energies`.
 
     Parameters
     ----------
-    compositions : numpy.ndarray of floats, shape (n_points, n_composition_axes)
+    compositions : np.ndarray of floats, shape (n_points, n_composition_axes)
         Compositions of points to get hull distances for. If a 1D array is provided, it is assumed to be a column (multiple points, one composition axis).
-    energies : numpy.ndarray of floats, shape (n_points,)
+    energies : np.ndarray of floats, shape (n_points,)
         Energies of points to get hull distances for.
-    convex_hull : scipy.spatial.ConvexHull, optional
+    convex_hull : ConvexHull, optional
         Complete convex hull object. Last coordinate of each point is assumed to be energy.
     lower_hull_simplex_indices : Sequence[int], optional
         Indices of lower hull simplices (within `convex_hull.simplices`), if known.
@@ -295,7 +290,7 @@ def lower_hull_distances(
 
     Returns
     -------
-    numpy.ndarray of floats, shape (n_points,)
+    np.ndarray of floats, shape (n_points,)
         Hull distances of points.
     """
     if convex_hull is None:

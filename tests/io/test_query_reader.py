@@ -1,5 +1,5 @@
 import pytest
-from thermocore.io.casm import casm_query_reader
+from thermocore.io.casm import regroup_query_by_config_property
 
 
 @pytest.fixture
@@ -45,6 +45,5 @@ def expected_query_data():
 # test thermocore.io.casm.casm_query_reader
 def test_query_reader(query_data, expected_query_data):
     """Compare results of casm_query_reader to expected output."""
-    query_reader_test = casm_query_reader(query_data)
+    query_reader_test = regroup_query_by_config_property(query_data)
     assert query_reader_test == expected_query_data
-
