@@ -3,7 +3,7 @@ import numpy as np
 
 
 def casm_query_reader(casm_query_json_data: list) -> dict:
-    """Reads keys and values from casm query json dictionary.
+    """Groups CASM query data by property instead of by configuration. 
 
     Parameters:
     -----------
