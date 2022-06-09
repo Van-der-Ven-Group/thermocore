@@ -1,4 +1,5 @@
 from __future__ import annotations
+from more_itertools import value_chain
 import numpy as np
 from collections.abc import Sequence
 import copy
@@ -137,23 +138,23 @@ def append_ECIs_to_basis_data(
 
 # TODO: Write test function for this
 # TODO: Did we even want this function?
-def zero_out_ecis_vector(eci_vector: list, tol=1e-10):
+def zero_out_vector(data_vector: list, tol=1e-10):
     """Returns a vector where values within a tolerance to 0 are set to 0.
 
     Parameters
     ----------
-    eci_vector : list
-        List of ECI values
+    data_vector : list
+        List of values (ex. ECIs)
     tol : float
         Tolerance for zeroing out the ecis
 
     Returns
     -------
-    eci_vector : list
-        List of ECI values with values within a tolerance to 0 set to 0.
+    zeroed_vector : list
+        List of data_vector values with values within a tolerance to 0 set to 0.
     """
     # Iterate through dictionary and find all eci keys
-    for i, eci in enumerate(eci_vector):
-        if isclose(eci, 0, abs_tol=tol):
-            eci_vector[i] = 0
-    return eci_vector
+    for i, value in enumerate(data_vector):
+        if isclose(value, 0, abs_tol=tol):
+            data_vector[i] = 0
+    return data_vector
