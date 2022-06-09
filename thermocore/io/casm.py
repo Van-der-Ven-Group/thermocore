@@ -1,5 +1,4 @@
 from __future__ import annotations
-from more_itertools import value_chain
 import numpy as np
 from collections.abc import Sequence
 import copy
