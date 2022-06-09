@@ -133,27 +133,3 @@ def append_ECIs_to_basis_data(
             if eci_value != 0:
                 cluster["eci"] = eci_value
     return eci_json
-
-
-# TODO: Write test function for this
-# TODO: Did we even want this function?
-def zero_out_vector(data_vector: list, tol=1e-10):
-    """Returns a vector where values within a tolerance to 0 are set to 0.
-
-    Parameters
-    ----------
-    data_vector : list
-        List of values (ex. ECIs)
-    tol : float
-        Tolerance for zeroing out the ecis
-
-    Returns
-    -------
-    zeroed_vector : list
-        List of data_vector values with values within a tolerance to 0 set to 0.
-    """
-    # Iterate through dictionary and find all eci keys
-    for i, value in enumerate(data_vector):
-        if isclose(value, 0, abs_tol=tol):
-            data_vector[i] = 0
-    return data_vector
