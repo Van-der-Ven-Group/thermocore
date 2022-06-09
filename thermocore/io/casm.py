@@ -3,7 +3,7 @@ import numpy as np
 
 
 def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
-    """Groups CASM query data by property instead of by configuration. 
+    """Groups CASM query data by property instead of by configuration.
 
     Parameters:
     -----------
@@ -17,10 +17,10 @@ def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
 
     Notes:
     ------
-    Casm query jsons are lists of dictionaries; each dictionary corresponds to a configuration. 
+    Casm query jsons are lists of dictionaries; each dictionary corresponds to a configuration.
     This function assumes that all dictionaries have the same keys. It sorts all properties by those keys instead of by configuration.
-    Properties that are a single value or string are passed as a list of those properties. 
-    Properties that are arrays are passed as a list of lists (2D matrices) even if the property only has one value (a matrix of one column). 
+    Properties that are a single value or string are passed as a list of those properties.
+    Properties that are arrays are passed as a list of lists (2D matrices) even if the property only has one value (a matrix of one column).
     """
     data = casm_query_json_data
     keys = data[0].keys()

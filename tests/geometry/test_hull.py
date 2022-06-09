@@ -1,6 +1,5 @@
 import pytest
 import numpy as np
-from scipy.spatial import ConvexHull
 from thermocore.geometry.hull import (
     barycentric_coordinates,
     lower_hull,
