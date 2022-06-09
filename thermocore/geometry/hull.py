@@ -3,6 +3,7 @@ from collections.abc import Sequence
 import numpy as np
 from scipy.optimize import linprog
 from scipy.spatial import ConvexHull
+from typing import List, Tuple, Sequence
 
 
 def barycentric_coordinates(
@@ -310,7 +311,7 @@ def missing_and_spurious_ground_states(
     compositions: np.ndarray,
     predicted_energies: np.ndarray,
     calculated_ground_state_indices: np.ndarray,
-) -> tuple(np.ndarray, np.ndarray):
+) -> Tuple[np.ndarray, np.ndarray]:
     """Returns indices of missing ground states (calculated ground states that are not predicted ground states), and spurious ground states (predicted ground states that are not calculated ground states).
 
     Parameters:
