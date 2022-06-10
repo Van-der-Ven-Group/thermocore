@@ -25,21 +25,23 @@ def select_basis_functions_by_orbit_filters(
     selected_indices : list[int]
         Linear function indices of basis functions that meet all of the selection criteria (ignores None).
 
-    Example usage
-    -------------
-    # Pass filters to select_basis_functions_by_orbit_filters
-    selection_indices = select_basis_functions_by_orbit_filters([max_length_filter(4.5,2),
-                                                                max_length_filter(4.0,3)],
-                                                                basis_data)
-    ------------------------------------------------------------------
+    Examples
+    --------
+    Pass filters to select_basis_functions_by_orbit_filters
+        selection_indices =
+            select_basis_functions_by_orbit_filters(
+                    [max_length_filter(4.5,2),
+                    max_length_filter(4.0,3)],
+                    basis_data)
+
     """
     selected_indices = []
     for orbit in basis_data["orbits"]:
         if all(
             [
-                x
-                for x in [selection(orbit) for selection in orbit_filters]
-                if x is not None
+                select_orbit
+                for select_orbit in [selection(orbit) for selection in orbit_filters]
+                if select_orbit is not None
             ]
         ):
             selected_indices.extend(
