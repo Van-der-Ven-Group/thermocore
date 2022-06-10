@@ -1,6 +1,5 @@
 from collections.abc import Sequence
 from typing import Callable
-import numpy as np
 
 
 def select_basis_functions_by_orbit_filters(
