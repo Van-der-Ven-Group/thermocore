@@ -2,7 +2,6 @@ from __future__ import annotations
 import numpy as np
 from collections.abc import Sequence
 import copy
-from math import isclose
 
 
 def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
@@ -21,9 +20,11 @@ def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
     Notes:
     ------
     Casm query jsons are lists of dictionaries; each dictionary corresponds to a configuration.
-    This function assumes that all dictionaries have the same keys. It sorts all properties by those keys instead of by configuration.
+    This function assumes that all dictionaries have the same keys.
+    It sorts all properties by those keys instead of by configuration.
     Properties that are a single value or string are passed as a list of those properties.
-    Properties that are arrays are passed as a list of lists (2D matrices) even if the property only has one value (a matrix of one column).
+    Properties that are arrays are passed as a list of lists (2D matrices) even if the
+    property only has one value (a matrix of one column).
     """
     data = casm_query_json_data
     keys = data[0].keys()
@@ -53,7 +54,8 @@ def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
 
 
 def pull_ecis_from_json(eci_json: dict) -> list:
-    """Returns a list of ECIs from a CASMv1.2.0 eci.json file. Can specify specific linear function indices of interest.
+    """Returns a list of ECIs from a CASMv1.2.0 eci.json file.
+    Can specify specific linear function indices of interest.
 
     Parameters
     ----------
@@ -75,7 +77,8 @@ def pull_ecis_from_json(eci_json: dict) -> list:
 
 
 def pull_multiplicity_from_json(basis_json: dict) -> list:
-    """Returns multiplicities from a CASMv1.2.0 basis.json or eci.json file. Can specify specific linear function indices of interest.
+    """Returns multiplicities from a CASMv1.2.0 basis.json or eci.json file.
+    Can specify specific linear function indices of interest.
 
     Parameters
     ----------
@@ -98,7 +101,9 @@ def pull_multiplicity_from_json(basis_json: dict) -> list:
 def append_ECIs_to_basis_data(
     ecis: np.ndarray, basis_data: dict, basis_function_indices: Sequence = None
 ) -> dict:
-    """Appends ECI values to a dictionary of CASM basis set data, such that they can be properly loaded into CASM. This function will write the eci values as given in ecis except for those that are exactly zero. Any zero-ing out within a tolerance range should be done in pre- or post-processing.
+    """Appends ECI values to a dictionary of CASM basis set data, such that they can be properly loaded into CASM.
+    This function will write the eci values as given in ecis except for those that are exactly zero.
+    Any zero-ing out within a tolerance range should be done in pre- or post-processing.
 
     Parameters
     ----------
@@ -106,7 +111,8 @@ def append_ECIs_to_basis_data(
     basis_data : dict
         CASM basis set data (e.g. loaded from a basis.json file).
     basis_function_indices : Sequence[int]
-        Indices of the basis functions (linear_function_indices) corresponding to `ecis` that want to be turned on. Default = None indicating a non-sparse input of ecis.
+        Indices of the basis functions (linear_function_indices) corresponding to `ecis` that want to be turned on.
+        Default = None indicating a non-sparse input of ecis.
 
     Returns
     -------
