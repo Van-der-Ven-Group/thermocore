@@ -1,0 +1,24 @@
+{
+  "basis" : [
+    {
+      "coordinate" : [ 0.500000000000, 0.500000000000, 0.500000000000 ],
+      "occupant_dof" : [ "N", "O", "Va" ]
+    },
+    {
+	"coordinate" : [ 0.250000000, 0.2500000000, 0.2500000000 ],
+	"occupant_dof" : ["O", "Va"]
+    },
+    {
+      "coordinate" : [ 0.000000000000, 0.000000000000, 0.000000000000 ],
+      "occupant_dof" : [ "Hf" ]
+    }
+  ],
+  "coordinate_mode" : "Fractional",
+  "description" : "HfN_rocksalt_octahedralN_primitive",
+  "lattice_vectors" : [
+    [ 0.000000000000, 2.281537715135, 2.281537715135 ],
+    [ 2.281537715135, 0.000000000000, 2.281537715135 ],
+    [ 2.281537715135, 2.281537715135, 0.000000000000 ]
+  ],
+  "title" : "HfNO_rocksalt_octahedrals"
+}
