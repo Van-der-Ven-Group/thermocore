@@ -11,11 +11,11 @@ def select_basis_functions_by_orbit_filters(
     ----------
     orbit_filters : Sequence of functions
         Boolean functions operating on individual orbit data to use as selection criteria.
-        Each function must take a dict of one orbits's data (e.g. one element of `basis_data`["orbits"])
+        Each function must take a dict of one orbits's data (e.g. one element of ``basis_data["orbits"]``)
         as its sole parameter and returns a bool indicating whether the orbit meets that particular criterion.
-            If the orbit does not meet the criterion, the orbit is excluded from the selection.
-            If the orbit cannot be filtered by the function (ie. different cluster_size for length filters),
-            the filter returns None and is ignored.
+        If the orbit does not meet the criterion, the orbit is excluded from the selection.
+        If the orbit cannot be filtered by the function (ie. different cluster_size for length filters),
+        the filter returns None and is ignored.
     basis_data : dict
         CASM basis set data (e.g. loaded from a basis.json file).
 
@@ -55,11 +55,11 @@ def select_basis_functions_by_orbit_filters(
 def max_length_filter(cluster_size: int, max_length: float) -> Callable:
     """Returns a function that takes orbit_data as input for the selection filtering.
     The returned function returns False if an orbit of size cluster_size
-        has maximum cluster size > max_length.
+    has maximum cluster size > max_length.
     Function returns True if the orbit of size cluster_size
-        has maximum cluster size <= max_length.
+    has maximum cluster size <= max_length.
     Function returns None if the orbit is not of size cluster_size
-        (aka this filter cannot be applied)
+    (aka this filter cannot be applied)
 
 
     Parameters
@@ -79,11 +79,11 @@ def max_length_filter(cluster_size: int, max_length: float) -> Callable:
     def sub_max_length_filter(orbit_data: dict) -> bool:
         """Sub function for max_length_filter.
         Returns False if the orbit in `orbit_data` has `cluster_size` points
-            and a maximum distance between points greater than `maximum_length`
+        and a maximum distance between points greater than `maximum_length`
         Returns True if the orbit in `orbit_data` has `cluster_size` points
-            and a maximum distance between points less than `maximum_length`
+        and a maximum distance between points less than `maximum_length`
         Returns None if the orbit is not of size cluster_size
-            (aka this filter cannot be applied)
+        (aka this filter cannot be applied)
 
         Parameters
         ----------
@@ -106,11 +106,11 @@ def max_length_filter(cluster_size: int, max_length: float) -> Callable:
 def min_length_filter(cluster_size: int, min_length: float) -> Callable:
     """Returns function that takes orbit_data as input for the selection filtering.
     Returned function will return False if orbit of size cluster_size
-        has minimum cluster size < min_length.
+    has minimum cluster size < min_length.
     Returned function will True if orbit of size cluster_size
-        has minimum cluster size > min_length.
+    has minimum cluster size > min_length.
     Returned function will None if orbit is not of size cluster_size
-        (aka this filter cannot be applied).
+    (aka this filter cannot be applied).
 
     Parameters
     ----------
@@ -129,11 +129,11 @@ def min_length_filter(cluster_size: int, min_length: float) -> Callable:
     def sub_min_length_filter(orbit_data: dict) -> bool:
         """Sub function for max_length_filter.
         Returns False if the orbit in `orbit_data` has `cluster_size` points
-            and a minimum distance between points less than `min_length`.
+        and a minimum distance between points less than `min_length`.
         Returns True if the orbit in `orbit_data` has `cluster_size` points
-            and a minimum distance between points greater than `min_length`.
+        and a minimum distance between points greater than `min_length`.
         Returns None if the orbit is not of size cluster_size
-            (aka this filter cannot be applied).
+        (aka this filter cannot be applied).
 
         Parameters
         ----------
