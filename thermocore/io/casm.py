@@ -7,17 +7,17 @@ import copy
 def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
     """Groups CASM query data by property instead of by configuration.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     casm_query_json_data: list
         List of dictionaries read from casm query json file.
 
-    Returns:
-    --------
+    Returns
+    -------
     results: dict
         Dictionary of all data grouped by keys (not grouped by configuraton)
 
-    Notes:
+    Notes
     ------
     Casm query jsons are lists of dictionaries; each dictionary corresponds to a configuration.
     This function assumes that all dictionaries have the same keys.

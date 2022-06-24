@@ -130,11 +130,11 @@ def simplex_energy_equation_matrix(
     Each row in the matrix corresponds to a simplex (as specified by `simplex_indices`).
 
     Each simplex is described by a hyperplane. For example, in a 3d composition space
-        a1*x1 + a2*x2 + a3*x3 + b*e + c = 0
+    a1*x1 + a2*x2 + a3*x3 + b*e + c = 0
     where x1, x2, x3 are the composition variables and e is the energy.
 
     Solving for e yields
-        e = -(a1*x1 + a2*x2 + a3*x3 + c)/b
+    e = -(a1*x1 + a2*x2 + a3*x3 + c)/b
 
     The corresponding row in the equation matrix is then (-a1/b, -a2/b, -a3/b, -c/b),
     such that multiplying with the column vector (x1, x2, x3, 1) yields e.
