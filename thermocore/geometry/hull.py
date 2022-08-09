@@ -121,9 +121,7 @@ def lower_hull(
 
 
 def simplex_energy_equation_matrix(
-    convex_hull: ConvexHull,
-    simplex_indices: Sequence[int],
-    tolerance: float = 1e-14,
+    convex_hull: ConvexHull, simplex_indices: Sequence[int], tolerance: float = 1e-14,
 ) -> np.ndarray:
     """Returns a matrix that encodes the energy equation of each requested convex hull simplex.
 
@@ -305,3 +303,58 @@ def lower_hull_distances(
     return energies - lower_hull_energies(
         compositions, convex_hull, lower_hull_simplex_indices, tolerance=tolerance
     )
+
+
+def hull_distance_correlations(
+    corr: np.ndarray, comp: np.ndarray, formation_energy: np.ndarray
+) -> np.ndarray:
+    """Calculated the effective correlations to predict hull distance instead of absolute formation energy.
+    Parameters:
+    -----------
+    corr: np.array
+        nxk correlation matrix, where n is the number of configurations and k is the number of ECI.
+    comp: np.array
+        nxc matrix of compositions, where n is the number of configurations and c is the number of composition axes.
+    formation_energy: np.array
+        nx1 matrix of formation energies.
+
+    Returns:
+    --------
+    hulldist_corr: np.array
+        nxk matrix of effective correlations describing hull distance instead of absolute formation energy. n is the number of configurations and k is the number of ECI.
+    """
+
+    # Build convex hull from compositions and formation energies
+    hull = full_hull(compositions=comp, energies=formation_energy)
+
+    # Get convex hull simplices
+    lower_vertices, lower_simplices = lower_hull(hull)
+
+    hulldist_corr = np.zeros(corr.shape)
+
+    for config_index in list(range(corr.shape[0])):
+
+        # Find the simplex that contains the current configuration's composition, and find the hull energy for that composition
+        relevant_simplex_index, hull_energy = lower_hull_simplex_containing(
+            compositions=comp[config_index].reshape(1, -1),
+            convex_hull=hull,
+            lower_hull_simplex_indices=lower_simplices,
+        )
+
+        relevant_simplex_index = relevant_simplex_index[0]
+
+        # Find vectors defining the corners of the simplex which contains the curent configuration's composition.
+        simplex_corners = comp[hull.simplices[relevant_simplex_index]]
+        interior_point = np.array(comp[config_index]).reshape(1, -1)
+
+        # Find barycentric coordinates of the interior point in composition space
+        weights = barycentric_coordinates(
+            point=interior_point, vertices=simplex_corners
+        )
+
+        # Form the hull distance correlations by taking a linear combination of simplex corners.
+        hulldist_corr[config_index] = (
+            corr[config_index] - weights @ corr[hull.simplices[relevant_simplex_index]]
+        )
+
+    return hulldist_corr
