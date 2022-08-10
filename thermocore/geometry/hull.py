@@ -121,7 +121,9 @@ def lower_hull(
 
 
 def simplex_energy_equation_matrix(
-    convex_hull: ConvexHull, simplex_indices: Sequence[int], tolerance: float = 1e-14,
+    convex_hull: ConvexHull,
+    simplex_indices: Sequence[int],
+    tolerance: float = 1e-14,
 ) -> np.ndarray:
     """Returns a matrix that encodes the energy equation of each requested convex hull simplex.
 
