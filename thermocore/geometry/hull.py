@@ -307,7 +307,7 @@ def lower_hull_distances(
 
 def hull_distance_correlations(
     corr: np.ndarray,
-    comp: np.ndarray,
+    compositions: np.ndarray,
     formation_energy: np.ndarray,
     hull: ConvexHull = False,
 ) -> np.ndarray:
@@ -329,7 +329,7 @@ def hull_distance_correlations(
 
     # Build convex hull from compositions and formation energies
     if hull == False:
-        hull = full_hull(compositions=comp, energies=formation_energy)
+        hull = full_hull(compositions=compositions, energies=formation_energy)
 
     # Get convex hull simplices
     lower_vertices, lower_simplices = lower_hull(hull)
@@ -340,7 +340,7 @@ def hull_distance_correlations(
 
         # Find the simplex that contains the current configuration's composition, and find the hull energy for that composition
         relevant_simplex_index, hull_energy = lower_hull_simplex_containing(
-            compositions=comp[config_index].reshape(1, -1),
+            compositions=compositions[config_index].reshape(1, -1),
             convex_hull=hull,
             lower_hull_simplex_indices=lower_simplices,
         )
@@ -348,8 +348,8 @@ def hull_distance_correlations(
         relevant_simplex_index = relevant_simplex_index[0]
 
         # Find vectors defining the corners of the simplex which contains the curent configuration's composition.
-        simplex_corners = comp[hull.simplices[relevant_simplex_index]]
-        interior_point = np.array(comp[config_index]).reshape(1, -1)
+        simplex_corners = compositions[hull.simplices[relevant_simplex_index]]
+        interior_point = np.array(compositions[config_index]).reshape(1, -1)
 
         # Find barycentric coordinates of the interior point in composition space
         weights = barycentric_coordinates(
