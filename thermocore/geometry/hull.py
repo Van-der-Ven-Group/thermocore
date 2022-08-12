@@ -121,9 +121,7 @@ def lower_hull(
 
 
 def simplex_energy_equation_matrix(
-    convex_hull: ConvexHull,
-    simplex_indices: Sequence[int],
-    tolerance: float = 1e-14,
+    convex_hull: ConvexHull, simplex_indices: Sequence[int], tolerance: float = 1e-14,
 ) -> np.ndarray:
     """Returns a matrix that encodes the energy equation of each requested convex hull simplex.
 
@@ -308,7 +306,10 @@ def lower_hull_distances(
 
 
 def hull_distance_correlations(
-    corr: np.ndarray, comp: np.ndarray, formation_energy: np.ndarray
+    corr: np.ndarray,
+    comp: np.ndarray,
+    formation_energy: np.ndarray,
+    hull: ConvexHull = False,
 ) -> np.ndarray:
     """Calculated the effective correlations to predict hull distance instead of absolute formation energy.
     Parameters:
@@ -327,7 +328,8 @@ def hull_distance_correlations(
     """
 
     # Build convex hull from compositions and formation energies
-    hull = full_hull(compositions=comp, energies=formation_energy)
+    if hull == False:
+        hull = full_hull(compositions=comp, energies=formation_energy)
 
     # Get convex hull simplices
     lower_vertices, lower_simplices = lower_hull(hull)
