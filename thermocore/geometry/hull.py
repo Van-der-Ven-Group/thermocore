@@ -309,7 +309,7 @@ def hull_distance_correlations(
     corr: np.ndarray,
     compositions: np.ndarray,
     formation_energy: np.ndarray,
-    hull: ConvexHull = False,
+    hull: ConvexHull = None,
 ) -> np.ndarray:
     """Calculated the effective correlations to predict hull distance instead of absolute formation energy.
     Parameters:
@@ -328,7 +328,7 @@ def hull_distance_correlations(
     """
 
     # Build convex hull from compositions and formation energies
-    if hull == False:
+    if hull == None:
         hull = full_hull(compositions=compositions, energies=formation_energy)
 
     # Get convex hull simplices
