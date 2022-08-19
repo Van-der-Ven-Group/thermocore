@@ -121,7 +121,9 @@ def lower_hull(
 
 
 def simplex_energy_equation_matrix(
-    convex_hull: ConvexHull, simplex_indices: Sequence[int], tolerance: float = 1e-14,
+    convex_hull: ConvexHull,
+    simplex_indices: Sequence[int],
+    tolerance: float = 1e-14,
 ) -> np.ndarray:
     """Returns a matrix that encodes the energy equation of each requested convex hull simplex.
 
@@ -312,8 +314,20 @@ def hull_distance_correlations(
     hull: ConvexHull = None,
 ) -> np.ndarray:
     """Calculated the effective correlations to predict hull distance instead of absolute formation energy.
-    Parameters:
-    -----------
+    Like formation energies, the hull distance of a point can be described as a scalar product between effective cluster
+    interactions (ECI) and some vector of descriptors to characterize the atomic configuration ("hull correlations").
+    Assuming that the true ECI were known, the set of ECI could be multiplied with formation energy correlations to
+    obtain formation energy predictions; this same set of ECI could be multiplied with the hull correlations to predict
+    hull distances.
+
+    The hull correlation of an atomic configuration is found by taking the difference between the correlation for that
+    configuration and the linear combination of correlations that define the simplex below the configuration in
+    composition-formation_energy space. In this linear combination of ground state correlations, each ground state is
+    weighted by the barycentric coordinate in composition space of the configuration of interest.
+
+
+    Parameters
+    ----------
     corr: np.array
         nxk correlation matrix, where n is the number of configurations and k is the number of ECI.
     comp: np.array
@@ -321,8 +335,8 @@ def hull_distance_correlations(
     formation_energy: np.array
         nx1 matrix of formation energies.
 
-    Returns:
-    --------
+    Returns
+    -------
     hulldist_corr: np.array
         nxk matrix of effective correlations describing hull distance instead of absolute formation energy. n is the number of configurations and k is the number of ECI.
     """
