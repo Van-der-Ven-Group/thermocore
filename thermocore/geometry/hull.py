@@ -342,18 +342,18 @@ def hull_distance_correlations(
     """
 
     # Build convex hull from compositions and formation energies
-    if hull == None:
+    if hull is None:
         hull = full_hull(compositions=compositions, energies=formation_energy)
 
     # Get convex hull simplices
-    lower_vertices, lower_simplices = lower_hull(hull)
+    _, lower_simplices = lower_hull(hull)
 
     hulldist_corr = np.zeros(corr.shape)
 
     for config_index in list(range(corr.shape[0])):
 
         # Find the simplex that contains the current configuration's composition, and find the hull energy for that composition
-        relevant_simplex_index, hull_energy = lower_hull_simplex_containing(
+        relevant_simplex_index, _ = lower_hull_simplex_containing(
             compositions=compositions[config_index].reshape(1, -1),
             convex_hull=hull,
             lower_hull_simplex_indices=lower_simplices,
