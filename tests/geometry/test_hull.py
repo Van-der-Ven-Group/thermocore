@@ -105,7 +105,9 @@ def test_barycentric_coordinates_1D():
 def test_hull_correlation_calculator():
     """Tests the function 'hull_distance_correlations' by confirming that all points on the lower convex hull have hull correlations equal to the zero vector. """
     hullcorr = hull_distance_correlations(
-        ZrN_FCC_corr_subset, ZrN_FCC_composition_subset, ZrN_FCC_formation_energy_subset
+        ZrN_FCC_corr_subset(),
+        ZrN_FCC_composition_subset(),
+        ZrN_FCC_formation_energy_subset(),
     )
 
     precalculated_lower_hull_indices = np.array([0, 1, 21, 22, 23, 24, 25, 26])
