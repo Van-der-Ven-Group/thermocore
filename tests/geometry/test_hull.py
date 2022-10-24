@@ -2,6 +2,7 @@ import pytest
 import numpy as np
 from thermocore.geometry.hull import (
     barycentric_coordinates,
+    hull_distance_correlations,
     lower_hull,
     simplex_energy_equation_matrix,
     lower_hull_simplex_containing,
@@ -12,6 +13,9 @@ from tests.geometry.binary import (
     binary_lower_hull_simplices,
     binary_hull,
     binary_lower_hull_simplex_indices,
+    ZrN_FCC_composition_subset,
+    ZrN_FCC_formation_energy_subset,
+    ZrN_FCC_corr_subset,
 )
 
 
@@ -96,6 +100,20 @@ def test_barycentric_coordinates_1D():
                 x1 = 1 - (p - a) / (b - a)
                 x2 = 1 - x1
                 assert np.allclose(coordinates, np.array([x1, x2]))
+
+
+def test_hull_correlation_calculator(
+    ZrN_FCC_corr_subset, ZrN_FCC_composition_subset, ZrN_FCC_formation_energy_subset
+):
+    """Tests the function 'hull_distance_correlations' by confirming that all points on the lower convex hull have hull correlations equal to the zero vector. """
+    hullcorr = hull_distance_correlations(
+        ZrN_FCC_corr_subset,
+        ZrN_FCC_composition_subset,
+        ZrN_FCC_formation_energy_subset,
+    )
+
+    precalculated_lower_hull_indices = np.array([0, 1, 21, 22, 23, 24, 25, 26])
+    assert np.allclose(hullcorr[precalculated_lower_hull_indices], 0)
 
 
 # TODO: Tests for ternary data
