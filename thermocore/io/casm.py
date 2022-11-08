@@ -139,3 +139,36 @@ def append_ECIs_to_basis_data(
             if eci_value != 0:
                 cluster["eci"] = eci_value
     return eci_json
+
+
+def upscale_eci_vector(pruned_ecis: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    """Intended for cases when an ECI vector is pruned, and a user would like to then upscale the ECI vector back to its original size.
+        Takes a pruned vector of nonzero ECIs of length m, and a mask of length n, where n is the length of the original (non-sparse) ECI vector, and n>m.
+        The mask is a boolean array of length n, where the nonzero entries correspond to the indices of the ECIs that were pruned.
+        The output is a vector of length n, where the nonzero entries come from the pruned_ecis vector, and the pruned entries are zero.
+
+
+    Parameters
+    ----------
+    ecis : np.ndarray
+        Vector of ECI values, shape (m,)
+    mask : np.ndarray
+        Vector of Booleans, shape (n,) where True indicates the ECI is included in the vector. Number of True should equal the length of the ECI vector. Otherwise, the function will return an error.
+
+    Returns
+    -------
+    ecis_upscaled : np.ndarray
+        Vector of ECI values, shape (n,) upscaled to the original size of n.
+    """
+    if np.sum(mask) != len(pruned_ecis):
+        raise ValueError(
+            "The number of True elements in the mask must equal the length of the ECI vector."
+        )
+    else:
+        # Create a new vector of zeros. The length of the new vector will be the same as the mask.
+        # Find the indices of the mask where the value is 1
+        # Replace the zeros in the new vector with the ECI values, in the order of the indices of the mask where the value is 1
+        indices = np.nonzero(mask)[0]
+        ecis_upscaled = np.zeros(len(mask))
+        ecis_upscaled[indices] = pruned_ecis
+        return ecis_upscaled
