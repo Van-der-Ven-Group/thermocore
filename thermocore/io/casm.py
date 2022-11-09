@@ -164,11 +164,10 @@ def upscale_eci_vector(pruned_ecis: np.ndarray, mask: np.ndarray) -> np.ndarray:
         raise ValueError(
             "The number of True elements in the mask must equal the length of the ECI vector."
         )
-    else:
-        # Create a new vector of zeros. The length of the new vector will be the same as the mask.
-        # Find the indices of the mask where the value is 1
-        # Replace the zeros in the new vector with the ECI values, in the order of the indices of the mask where the value is 1
-        indices = np.nonzero(mask)[0]
-        ecis_upscaled = np.zeros(len(mask))
-        ecis_upscaled[indices] = pruned_ecis
-        return ecis_upscaled
+    # Create a new vector of zeros. The length of the new vector will be the same as the mask.
+    # Find the indices of the mask where the value is 1
+    # Replace the zeros in the new vector with the ECI values, in the order of the indices of the mask where the value is 1
+    indices = np.nonzero(mask)[0]
+    ecis_upscaled = np.zeros(len(mask))
+    ecis_upscaled[indices] = pruned_ecis
+    return ecis_upscaled
