@@ -4,13 +4,17 @@ from collections.abc import Sequence
 import copy
 
 
-def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
+def regroup_query_by_config_property(
+    casm_query_json_data: list, return_arrays: bool = True
+) -> dict:
     """Groups CASM query data by property instead of by configuration.
 
     Parameters
     ----------
     casm_query_json_data: list
         List of dictionaries read from casm query json file.
+    return_arrays: bool
+        If true, convert lists into numpy arrays.
 
     Returns
     -------
@@ -50,6 +54,9 @@ def regroup_query_by_config_property(casm_query_json_data: list) -> dict:
     if "corr" in results.keys():
         # Remove redundant dimensions in correlation matrix.
         results["corr"] = np.squeeze(results["corr"]).tolist()
+
+    if return_arrays is True:
+        results = {i: np.array(j) for i, j in results.items()}
     return results
 
 
