@@ -29,8 +29,8 @@ def select_basis_functions_by_orbit_filters(
     Pass filters to select_basis_functions_by_orbit_filters
         selection_indices =
             select_basis_functions_by_orbit_filters(
-                    [max_length_filter(4.5,2),
-                    max_length_filter(4.0,3)],
+                    [max_length_filter(2,4.5),
+                    max_length_filter(3,4.0)],
                     basis_data)
 
     """
